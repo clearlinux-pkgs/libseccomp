@@ -4,7 +4,7 @@
 #
 Name     : libseccomp
 Version  : 2.3.2
-Release  : 7
+Release  : 8
 URL      : http://github.com/seccomp/libseccomp/archive/v2.3.2.tar.gz
 Source0  : http://github.com/seccomp/libseccomp/archive/v2.3.2.tar.gz
 Summary  : The enhanced seccomp library
