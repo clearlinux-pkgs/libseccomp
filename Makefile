@@ -1,5 +1,5 @@
 PKG_NAME := libseccomp
-URL := http://github.com/seccomp/libseccomp/archive/v2.3.2.tar.gz
+URL = https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 
 
 include ../common/Makefile.common
