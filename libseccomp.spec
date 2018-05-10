@@ -6,7 +6,7 @@
 #
 Name     : libseccomp
 Version  : 2.3.3
-Release  : 10
+Release  : 11
 URL      : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 Source99 : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz.asc
