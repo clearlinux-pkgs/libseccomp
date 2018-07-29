@@ -6,7 +6,7 @@
 #
 Name     : libseccomp
 Version  : 2.3.3
-Release  : 14
+Release  : 15
 URL      : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 Source99 : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz.asc
@@ -17,6 +17,7 @@ Requires: libseccomp-bin
 Requires: libseccomp-lib
 Requires: libseccomp-license
 Requires: libseccomp-man
+BuildRequires : Cython
 BuildRequires : buildreq-distutils3
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
@@ -110,7 +111,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1532885219
+export SOURCE_DATE_EPOCH=1532885576
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -130,7 +131,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1532885219
+export SOURCE_DATE_EPOCH=1532885576
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/doc/libseccomp
 cp LICENSE %{buildroot}/usr/share/doc/libseccomp/LICENSE
