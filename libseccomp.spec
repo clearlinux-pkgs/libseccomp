@@ -6,7 +6,7 @@
 #
 Name     : libseccomp
 Version  : 2.3.3
-Release  : 15
+Release  : 16
 URL      : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 Source99 : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz.asc
@@ -15,6 +15,7 @@ Group    : Development/Tools
 License  : LGPL-2.1
 Requires: libseccomp-bin
 Requires: libseccomp-lib
+Requires: libseccomp-abi
 Requires: libseccomp-license
 Requires: libseccomp-man
 BuildRequires : Cython
@@ -24,15 +25,20 @@ BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
-BuildRequires : pbr
-BuildRequires : pip
-BuildRequires : python3-dev
-BuildRequires : setuptools
+BuildRequires : libabigail
 
 %description
 An Enhanced Seccomp (seccomp-bpf) Helper Library
 ===============================================================================
 https://github.com/seccomp/libseccomp
+
+%package abi
+Summary: abi components for the libseccomp package.
+Group: Default
+
+%description abi
+abi components for the libseccomp package.
+
 
 %package bin
 Summary: bin components for the libseccomp package.
@@ -111,7 +117,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1532885576
+export SOURCE_DATE_EPOCH=1532899197
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -131,7 +137,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1532885576
+export SOURCE_DATE_EPOCH=1532899197
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/doc/libseccomp
 cp LICENSE %{buildroot}/usr/share/doc/libseccomp/LICENSE
@@ -148,6 +154,11 @@ popd
 
 %files
 %defattr(-,root,root,-)
+
+%files abi
+%defattr(-,root,root,-)
+/usr/share/abi/libseccomp.so.2.3.3.abi
+/usr/share/abi/libseccomp.so.2.abi
 
 %files bin
 %defattr(-,root,root,-)
