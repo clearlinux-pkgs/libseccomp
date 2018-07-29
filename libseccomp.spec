@@ -6,7 +6,7 @@
 #
 Name     : libseccomp
 Version  : 2.3.3
-Release  : 13
+Release  : 14
 URL      : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 Source99 : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz.asc
@@ -15,10 +15,16 @@ Group    : Development/Tools
 License  : LGPL-2.1
 Requires: libseccomp-bin
 Requires: libseccomp-lib
-Requires: libseccomp-doc
+Requires: libseccomp-license
+Requires: libseccomp-man
+BuildRequires : buildreq-distutils3
+BuildRequires : gcc-dev32
+BuildRequires : gcc-libgcc32
+BuildRequires : gcc-libstdc++32
+BuildRequires : glibc-dev32
+BuildRequires : glibc-libc32
 BuildRequires : pbr
 BuildRequires : pip
-
 BuildRequires : python3-dev
 BuildRequires : setuptools
 
@@ -30,6 +36,8 @@ https://github.com/seccomp/libseccomp
 %package bin
 Summary: bin components for the libseccomp package.
 Group: Binaries
+Requires: libseccomp-license
+Requires: libseccomp-man
 
 %description bin
 bin components for the libseccomp package.
@@ -46,34 +54,74 @@ Provides: libseccomp-devel
 dev components for the libseccomp package.
 
 
-%package doc
-Summary: doc components for the libseccomp package.
-Group: Documentation
+%package dev32
+Summary: dev32 components for the libseccomp package.
+Group: Default
+Requires: libseccomp-lib32
+Requires: libseccomp-bin
+Requires: libseccomp-dev
 
-%description doc
-doc components for the libseccomp package.
+%description dev32
+dev32 components for the libseccomp package.
 
 
 %package lib
 Summary: lib components for the libseccomp package.
 Group: Libraries
+Requires: libseccomp-license
 
 %description lib
 lib components for the libseccomp package.
 
 
+%package lib32
+Summary: lib32 components for the libseccomp package.
+Group: Default
+Requires: libseccomp-license
+
+%description lib32
+lib32 components for the libseccomp package.
+
+
+%package license
+Summary: license components for the libseccomp package.
+Group: Default
+
+%description license
+license components for the libseccomp package.
+
+
+%package man
+Summary: man components for the libseccomp package.
+Group: Default
+
+%description man
+man components for the libseccomp package.
+
+
 %prep
 %setup -q -n libseccomp-2.3.3
+pushd ..
+cp -a libseccomp-2.3.3 build32
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1515641484
+export SOURCE_DATE_EPOCH=1532885219
 %configure --disable-static
 make  %{?_smp_mflags}
 
+pushd ../build32/
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export CFLAGS="$CFLAGS -m32"
+export CXXFLAGS="$CXXFLAGS -m32"
+export LDFLAGS="$LDFLAGS -m32"
+%configure --disable-static    --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
+make  %{?_smp_mflags}
+popd
 %check
 export LANG=C
 export http_proxy=http://127.0.0.1:9/
@@ -82,8 +130,19 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1515641484
+export SOURCE_DATE_EPOCH=1532885219
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/libseccomp
+cp LICENSE %{buildroot}/usr/share/doc/libseccomp/LICENSE
+pushd ../build32/
+%make_install32
+if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
+then
+pushd %{buildroot}/usr/lib32/pkgconfig
+for i in *.pc ; do ln -s $i 32$i ; done
+popd
+fi
+popd
 %make_install
 
 %files
@@ -98,13 +157,51 @@ rm -rf %{buildroot}
 /usr/include/*.h
 /usr/lib64/libseccomp.so
 /usr/lib64/pkgconfig/libseccomp.pc
+/usr/share/man/man3/seccomp_arch_add.3
+/usr/share/man/man3/seccomp_arch_exist.3
+/usr/share/man/man3/seccomp_arch_native.3
+/usr/share/man/man3/seccomp_arch_remove.3
+/usr/share/man/man3/seccomp_arch_resolve_name.3
+/usr/share/man/man3/seccomp_attr_get.3
+/usr/share/man/man3/seccomp_attr_set.3
+/usr/share/man/man3/seccomp_export_bpf.3
+/usr/share/man/man3/seccomp_export_pfc.3
+/usr/share/man/man3/seccomp_init.3
+/usr/share/man/man3/seccomp_load.3
+/usr/share/man/man3/seccomp_merge.3
+/usr/share/man/man3/seccomp_release.3
+/usr/share/man/man3/seccomp_reset.3
+/usr/share/man/man3/seccomp_rule_add.3
+/usr/share/man/man3/seccomp_rule_add_array.3
+/usr/share/man/man3/seccomp_rule_add_exact.3
+/usr/share/man/man3/seccomp_rule_add_exact_array.3
+/usr/share/man/man3/seccomp_syscall_priority.3
+/usr/share/man/man3/seccomp_syscall_resolve_name.3
+/usr/share/man/man3/seccomp_syscall_resolve_name_arch.3
+/usr/share/man/man3/seccomp_syscall_resolve_name_rewrite.3
+/usr/share/man/man3/seccomp_syscall_resolve_num_arch.3
+/usr/share/man/man3/seccomp_version.3
 
-%files doc
+%files dev32
 %defattr(-,root,root,-)
-%doc /usr/share/man/man1/*
-%doc /usr/share/man/man3/*
+/usr/lib32/libseccomp.so
+/usr/lib32/pkgconfig/32libseccomp.pc
+/usr/lib32/pkgconfig/libseccomp.pc
 
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libseccomp.so.2
 /usr/lib64/libseccomp.so.2.3.3
+
+%files lib32
+%defattr(-,root,root,-)
+/usr/lib32/libseccomp.so.2
+/usr/lib32/libseccomp.so.2.3.3
+
+%files license
+%defattr(-,root,root,-)
+/usr/share/doc/libseccomp/LICENSE
+
+%files man
+%defattr(-,root,root,-)
+/usr/share/man/man1/scmp_sys_resolver.1
