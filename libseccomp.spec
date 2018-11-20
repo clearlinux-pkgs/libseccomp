@@ -6,18 +6,17 @@
 #
 Name     : libseccomp
 Version  : 2.3.3
-Release  : 16
+Release  : 17
 URL      : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz
 Source99 : https://github.com/seccomp/libseccomp/releases/download/v2.3.3/libseccomp-2.3.3.tar.gz.asc
 Summary  : The enhanced seccomp library
 Group    : Development/Tools
 License  : LGPL-2.1
-Requires: libseccomp-bin
-Requires: libseccomp-lib
-Requires: libseccomp-abi
-Requires: libseccomp-license
-Requires: libseccomp-man
+Requires: libseccomp-bin = %{version}-%{release}
+Requires: libseccomp-lib = %{version}-%{release}
+Requires: libseccomp-license = %{version}-%{release}
+Requires: libseccomp-man = %{version}-%{release}
 BuildRequires : Cython
 BuildRequires : buildreq-distutils3
 BuildRequires : gcc-dev32
@@ -32,19 +31,11 @@ An Enhanced Seccomp (seccomp-bpf) Helper Library
 ===============================================================================
 https://github.com/seccomp/libseccomp
 
-%package abi
-Summary: abi components for the libseccomp package.
-Group: Default
-
-%description abi
-abi components for the libseccomp package.
-
-
 %package bin
 Summary: bin components for the libseccomp package.
 Group: Binaries
-Requires: libseccomp-license
-Requires: libseccomp-man
+Requires: libseccomp-license = %{version}-%{release}
+Requires: libseccomp-man = %{version}-%{release}
 
 %description bin
 bin components for the libseccomp package.
@@ -53,9 +44,9 @@ bin components for the libseccomp package.
 %package dev
 Summary: dev components for the libseccomp package.
 Group: Development
-Requires: libseccomp-lib
-Requires: libseccomp-bin
-Provides: libseccomp-devel
+Requires: libseccomp-lib = %{version}-%{release}
+Requires: libseccomp-bin = %{version}-%{release}
+Provides: libseccomp-devel = %{version}-%{release}
 
 %description dev
 dev components for the libseccomp package.
@@ -64,9 +55,9 @@ dev components for the libseccomp package.
 %package dev32
 Summary: dev32 components for the libseccomp package.
 Group: Default
-Requires: libseccomp-lib32
-Requires: libseccomp-bin
-Requires: libseccomp-dev
+Requires: libseccomp-lib32 = %{version}-%{release}
+Requires: libseccomp-bin = %{version}-%{release}
+Requires: libseccomp-dev = %{version}-%{release}
 
 %description dev32
 dev32 components for the libseccomp package.
@@ -75,7 +66,7 @@ dev32 components for the libseccomp package.
 %package lib
 Summary: lib components for the libseccomp package.
 Group: Libraries
-Requires: libseccomp-license
+Requires: libseccomp-license = %{version}-%{release}
 
 %description lib
 lib components for the libseccomp package.
@@ -84,7 +75,7 @@ lib components for the libseccomp package.
 %package lib32
 Summary: lib32 components for the libseccomp package.
 Group: Default
-Requires: libseccomp-license
+Requires: libseccomp-license = %{version}-%{release}
 
 %description lib32
 lib32 components for the libseccomp package.
@@ -117,12 +108,13 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1532899197
+export SOURCE_DATE_EPOCH=1542748244
 %configure --disable-static
 make  %{?_smp_mflags}
 
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export ASFLAGS="$ASFLAGS --32"
 export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
 export LDFLAGS="$LDFLAGS -m32"
@@ -135,12 +127,14 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
+cd ../build32;
+make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1532899197
+export SOURCE_DATE_EPOCH=1542748244
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/libseccomp
-cp LICENSE %{buildroot}/usr/share/doc/libseccomp/LICENSE
+mkdir -p %{buildroot}/usr/share/package-licenses/libseccomp
+cp LICENSE %{buildroot}/usr/share/package-licenses/libseccomp/LICENSE
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -154,11 +148,6 @@ popd
 
 %files
 %defattr(-,root,root,-)
-
-%files abi
-%defattr(-,root,root,-)
-/usr/share/abi/libseccomp.so.2.3.3.abi
-/usr/share/abi/libseccomp.so.2.abi
 
 %files bin
 %defattr(-,root,root,-)
@@ -211,9 +200,9 @@ popd
 /usr/lib32/libseccomp.so.2.3.3
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/libseccomp/LICENSE
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/libseccomp/LICENSE
 
 %files man
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 /usr/share/man/man1/scmp_sys_resolver.1
