@@ -5,11 +5,11 @@
 # Source0 file verified with key 0xEA20F2DA97378973 (pcmoore@umich.edu)
 #
 Name     : libseccomp
-Version  : 2.4.0
-Release  : 18
-URL      : https://github.com/seccomp/libseccomp/releases/download/v2.4.0/libseccomp-2.4.0.tar.gz
-Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.4.0/libseccomp-2.4.0.tar.gz
-Source99 : https://github.com/seccomp/libseccomp/releases/download/v2.4.0/libseccomp-2.4.0.tar.gz.asc
+Version  : 2.4.1
+Release  : 19
+URL      : https://github.com/seccomp/libseccomp/releases/download/v2.4.1/libseccomp-2.4.1.tar.gz
+Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.4.1/libseccomp-2.4.1.tar.gz
+Source99 : https://github.com/seccomp/libseccomp/releases/download/v2.4.1/libseccomp-2.4.1.tar.gz.asc
 Summary  : The enhanced seccomp library
 Group    : Development/Tools
 License  : LGPL-2.1
@@ -35,7 +35,6 @@ https://github.com/seccomp/libseccomp
 Summary: bin components for the libseccomp package.
 Group: Binaries
 Requires: libseccomp-license = %{version}-%{release}
-Requires: libseccomp-man = %{version}-%{release}
 
 %description bin
 bin components for the libseccomp package.
@@ -47,6 +46,7 @@ Group: Development
 Requires: libseccomp-lib = %{version}-%{release}
 Requires: libseccomp-bin = %{version}-%{release}
 Provides: libseccomp-devel = %{version}-%{release}
+Requires: libseccomp = %{version}-%{release}
 
 %description dev
 dev components for the libseccomp package.
@@ -98,9 +98,9 @@ man components for the libseccomp package.
 
 
 %prep
-%setup -q -n libseccomp-2.4.0
+%setup -q -n libseccomp-2.4.1
 pushd ..
-cp -a libseccomp-2.4.0 build32
+cp -a libseccomp-2.4.1 build32
 popd
 
 %build
@@ -108,7 +108,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1553015491
+export SOURCE_DATE_EPOCH=1555630149
 export LDFLAGS="${LDFLAGS} -fno-lto"
 %configure --disable-static
 make  %{?_smp_mflags}
@@ -132,7 +132,7 @@ cd ../build32;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1553015491
+export SOURCE_DATE_EPOCH=1555630149
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libseccomp
 cp LICENSE %{buildroot}/usr/share/package-licenses/libseccomp/LICENSE
@@ -195,12 +195,12 @@ popd
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libseccomp.so.2
-/usr/lib64/libseccomp.so.2.4.0
+/usr/lib64/libseccomp.so.2.4.1
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libseccomp.so.2
-/usr/lib32/libseccomp.so.2.4.0
+/usr/lib32/libseccomp.so.2.4.1
 
 %files license
 %defattr(0644,root,root,0755)
