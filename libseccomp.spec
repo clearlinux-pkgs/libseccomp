@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x356CE62C2B524099 (tom.hromatka@oracle.com)
 #
 Name     : libseccomp
-Version  : 2.5.2
-Release  : 25
-URL      : https://github.com/seccomp/libseccomp/releases/download/v2.5.2/libseccomp-2.5.2.tar.gz
-Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.5.2/libseccomp-2.5.2.tar.gz
-Source1  : https://github.com/seccomp/libseccomp/releases/download/v2.5.2/libseccomp-2.5.2.tar.gz.asc
+Version  : 2.5.3
+Release  : 26
+URL      : https://github.com/seccomp/libseccomp/releases/download/v2.5.3/libseccomp-2.5.3.tar.gz
+Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.5.3/libseccomp-2.5.3.tar.gz
+Source1  : https://github.com/seccomp/libseccomp/releases/download/v2.5.3/libseccomp-2.5.3.tar.gz.asc
 Summary  : The enhanced seccomp library
 Group    : Development/Tools
 License  : LGPL-2.1
@@ -99,10 +99,10 @@ man components for the libseccomp package.
 
 
 %prep
-%setup -q -n libseccomp-2.5.2
-cd %{_builddir}/libseccomp-2.5.2
+%setup -q -n libseccomp-2.5.3
+cd %{_builddir}/libseccomp-2.5.3
 pushd ..
-cp -a libseccomp-2.5.2 build32
+cp -a libseccomp-2.5.3 build32
 popd
 
 %build
@@ -110,7 +110,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1630528205
+export SOURCE_DATE_EPOCH=1636401434
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -120,7 +120,7 @@ export CXXFLAGS="$CXXFLAGS -fno-lto "
 make  %{?_smp_mflags}
 
 pushd ../build32/
-export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
 export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
 export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
@@ -138,15 +138,21 @@ cd ../build32;
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1630528205
+export SOURCE_DATE_EPOCH=1636401434
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libseccomp
-cp %{_builddir}/libseccomp-2.5.2/LICENSE %{buildroot}/usr/share/package-licenses/libseccomp/4c04c844a5cb16b3629d0052f1304b7a565bd4a8
+cp %{_builddir}/libseccomp-2.5.3/LICENSE %{buildroot}/usr/share/package-licenses/libseccomp/4c04c844a5cb16b3629d0052f1304b7a565bd4a8
 pushd ../build32/
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
 then
 pushd %{buildroot}/usr/lib32/pkgconfig
+for i in *.pc ; do ln -s $i 32$i ; done
+popd
+fi
+if [ -d %{buildroot}/usr/share/pkgconfig ]
+then
+pushd %{buildroot}/usr/share/pkgconfig
 for i in *.pc ; do ln -s $i 32$i ; done
 popd
 fi
@@ -208,12 +214,12 @@ popd
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libseccomp.so.2
-/usr/lib64/libseccomp.so.2.5.2
+/usr/lib64/libseccomp.so.2.5.3
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libseccomp.so.2
-/usr/lib32/libseccomp.so.2.5.2
+/usr/lib32/libseccomp.so.2.5.3
 
 %files license
 %defattr(0644,root,root,0755)
