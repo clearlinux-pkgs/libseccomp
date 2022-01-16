@@ -6,7 +6,7 @@
 #
 Name     : libseccomp
 Version  : 2.5.3
-Release  : 26
+Release  : 27
 URL      : https://github.com/seccomp/libseccomp/releases/download/v2.5.3/libseccomp-2.5.3.tar.gz
 Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.5.3/libseccomp-2.5.3.tar.gz
 Source1  : https://github.com/seccomp/libseccomp/releases/download/v2.5.3/libseccomp-2.5.3.tar.gz.asc
@@ -17,7 +17,6 @@ Requires: libseccomp-bin = %{version}-%{release}
 Requires: libseccomp-lib = %{version}-%{release}
 Requires: libseccomp-license = %{version}-%{release}
 Requires: libseccomp-man = %{version}-%{release}
-BuildRequires : Cython
 BuildRequires : buildreq-distutils3
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
@@ -26,6 +25,7 @@ BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
 BuildRequires : gperf
 BuildRequires : libabigail
+BuildRequires : pypi-cython
 
 %description
 ![Enhanced Seccomp Helper Library](https://github.com/seccomp/libseccomp-artwork/blob/main/logo/libseccomp-color_text.png)
@@ -110,7 +110,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1636401434
+export SOURCE_DATE_EPOCH=1642360246
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -138,7 +138,7 @@ cd ../build32;
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1636401434
+export SOURCE_DATE_EPOCH=1642360246
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libseccomp
 cp %{_builddir}/libseccomp-2.5.3/LICENSE %{buildroot}/usr/share/package-licenses/libseccomp/4c04c844a5cb16b3629d0052f1304b7a565bd4a8
