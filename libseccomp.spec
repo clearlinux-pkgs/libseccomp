@@ -6,7 +6,7 @@
 #
 Name     : libseccomp
 Version  : 2.5.4
-Release  : 28
+Release  : 29
 URL      : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz
 Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz
 Source1  : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz.asc
@@ -14,6 +14,7 @@ Summary  : The enhanced seccomp library
 Group    : Development/Tools
 License  : LGPL-2.1
 Requires: libseccomp-bin = %{version}-%{release}
+Requires: libseccomp-filemap = %{version}-%{release}
 Requires: libseccomp-lib = %{version}-%{release}
 Requires: libseccomp-license = %{version}-%{release}
 Requires: libseccomp-man = %{version}-%{release}
@@ -36,6 +37,7 @@ https://github.com/seccomp/libseccomp
 Summary: bin components for the libseccomp package.
 Group: Binaries
 Requires: libseccomp-license = %{version}-%{release}
+Requires: libseccomp-filemap = %{version}-%{release}
 
 %description bin
 bin components for the libseccomp package.
@@ -64,10 +66,19 @@ Requires: libseccomp-dev = %{version}-%{release}
 dev32 components for the libseccomp package.
 
 
+%package filemap
+Summary: filemap components for the libseccomp package.
+Group: Default
+
+%description filemap
+filemap components for the libseccomp package.
+
+
 %package lib
 Summary: lib components for the libseccomp package.
 Group: Libraries
 Requires: libseccomp-license = %{version}-%{release}
+Requires: libseccomp-filemap = %{version}-%{release}
 
 %description lib
 lib components for the libseccomp package.
@@ -104,13 +115,16 @@ cd %{_builddir}/libseccomp-2.5.4
 pushd ..
 cp -a libseccomp-2.5.4 build32
 popd
+pushd ..
+cp -a libseccomp-2.5.4 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1650551896
+export SOURCE_DATE_EPOCH=1656049343
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -128,6 +142,16 @@ export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
 %configure --disable-static    --libdir=/usr/lib32 --build=i686-generic-linux-gnu --host=i686-generic-linux-gnu --target=i686-clr-linux-gnu
 make  %{?_smp_mflags}
 popd
+unset PKG_CONFIG_PATH
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3"
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3"
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
+%configure --disable-static
+make  %{?_smp_mflags}
+popd
 %check
 export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
@@ -136,9 +160,11 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check
 cd ../build32;
 make %{?_smp_mflags} check || :
+cd ../buildavx2;
+make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1650551896
+export SOURCE_DATE_EPOCH=1656049343
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libseccomp
 cp %{_builddir}/libseccomp-2.5.4/LICENSE %{buildroot}/usr/share/package-licenses/libseccomp/4c04c844a5cb16b3629d0052f1304b7a565bd4a8
@@ -157,7 +183,11 @@ for i in *.pc ; do ln -s $i 32$i ; done
 popd
 fi
 popd
+pushd ../buildavx2/
+%make_install_v3
+popd
 %make_install
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
@@ -165,6 +195,7 @@ popd
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/scmp_sys_resolver
+/usr/share/clear/optimized-elf/bin*
 
 %files dev
 %defattr(-,root,root,-)
@@ -211,8 +242,15 @@ popd
 /usr/lib32/pkgconfig/32libseccomp.pc
 /usr/lib32/pkgconfig/libseccomp.pc
 
+%files filemap
+%defattr(-,root,root,-)
+/usr/share/clear/filemap/filemap-libseccomp
+
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/glibc-hwcaps/x86-64-v3/libseccomp.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libseccomp.so.2
+/usr/lib64/glibc-hwcaps/x86-64-v3/libseccomp.so.2.5.4
 /usr/lib64/libseccomp.so.2
 /usr/lib64/libseccomp.so.2.5.4
 
