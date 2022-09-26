@@ -6,7 +6,7 @@
 #
 Name     : libseccomp
 Version  : 2.5.4
-Release  : 33
+Release  : 34
 URL      : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz
 Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz
 Source1  : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz.asc
