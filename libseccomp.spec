@@ -6,7 +6,7 @@
 #
 Name     : libseccomp
 Version  : 2.5.4
-Release  : 35
+Release  : 36
 URL      : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz
 Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz
 Source1  : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz.asc
@@ -25,7 +25,6 @@ BuildRequires : gcc-libstdc++32
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
 BuildRequires : gperf
-BuildRequires : libabigail
 BuildRequires : pypi-cython
 
 %description
@@ -124,7 +123,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1665100060
+export SOURCE_DATE_EPOCH=1670362132
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -164,7 +163,7 @@ cd ../buildavx2;
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1665100060
+export SOURCE_DATE_EPOCH=1670362132
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libseccomp
 cp %{_builddir}/libseccomp-%{version}/LICENSE %{buildroot}/usr/share/package-licenses/libseccomp/4c04c844a5cb16b3629d0052f1304b7a565bd4a8
