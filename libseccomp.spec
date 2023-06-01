@@ -7,7 +7,7 @@
 #
 Name     : libseccomp
 Version  : 2.5.4
-Release  : 39
+Release  : 40
 URL      : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz
 Source0  : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz
 Source1  : https://github.com/seccomp/libseccomp/releases/download/v2.5.4/libseccomp-2.5.4.tar.gz.asc
@@ -116,7 +116,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1685637980
+export SOURCE_DATE_EPOCH=1685644617
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 export FCFLAGS="$FFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
@@ -156,7 +156,7 @@ cd ../buildavx2;
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1685637980
+export SOURCE_DATE_EPOCH=1685644617
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libseccomp
 cp %{_builddir}/libseccomp-%{version}/LICENSE %{buildroot}/usr/share/package-licenses/libseccomp/4c04c844a5cb16b3629d0052f1304b7a565bd4a8 || :
